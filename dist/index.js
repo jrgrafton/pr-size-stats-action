@@ -85,12 +85,12 @@ async function main() {
   });
 	
   console.log("TESTING FETCHING ALL PULL REQUESTS")
-  console.log(pullRequests.length)	
+  console.log(pullRequests)	
 	
   for (const pullRequest in pullRequests.data) {
     const changedLines = getChangedLines(isIgnored, pullRequest)
     console.log("Changed Lines: " + changedLines)
-    console.log(JSON.stringify(pullRequest))
+    console.log(pullRequest)
   }
 	
   return true;
