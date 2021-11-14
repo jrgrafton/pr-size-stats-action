@@ -66,19 +66,19 @@ async function main() {
     auth: `token ${GITHUB_TOKEN}`,
     userAgent: "pascalgn/size-label-action"
   });
-
-  /* const pullRequestDiff = await octokit.pulls.get({
-    ...pullRequestHome,
-    pull_number,
-    headers: {
-      accept: "application/vnd.github.v3.diff"
-    }
-  });*/
   
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
     sort : 'created',
     direction: 'desc',
+    headers: {
+      accept: "application/vnd.github.v3.text+json"
+    }
+  });
+  
+  const pullRequestDiffOld = await octokit.pulls.get({
+    ...pullRequestHome,
+    pull_number,
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
@@ -86,11 +86,14 @@ async function main() {
 	
   console.log("FOUND THIS MANY PULL REQUESTS")
   console.log(pullRequests.data.length)
+  
+  console.log("OLD DIFF FOUND")
+  console.log(pullRequestDiffOld)
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     const pullRequest = pullRequests.data[0];
     const pullRequestNumber = pullRequest.number;
-	  console.log("expected: " + pull_number);
+    console.log("expected: " + pull_number);
     console.log("got: " + pullRequestNumber)
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
