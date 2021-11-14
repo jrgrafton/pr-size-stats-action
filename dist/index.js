@@ -92,7 +92,7 @@ async function main() {
     var pullRequestNumber = Number(pullRequest.number);
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
-      pull_number,
+      pullRequestNumber,
       headers: {
         accept: "application/vnd.github.v3.diff"
       }
