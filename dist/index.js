@@ -67,13 +67,13 @@ async function main() {
     userAgent: "pascalgn/size-label-action"
   });
 
-  /* const pullRequestDiff = await octokit.pulls.get({
+  const pullRequestDiff = await octokit.pulls.get({
     ...pullRequestHome,
     pull_number,
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
-  }); */
+  });
   
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
@@ -84,10 +84,12 @@ async function main() {
     }
   });
 	
-  console.log("TESTING FETCHING ALL PULL REQUESTS")
-  console.log(pullRequests)	
+  console.log("PRINTING FIRST DATA FROM LIST")
+  console.log(pullRequests.data[0])
+  console.log("PRINTING DATA FROM THIS PULL")
+  console.log(pullRequestDiff.data)
 
-	pullRequests.data.forEach(function(pullRequest) {
+  pullRequests.data.forEach(function(pullRequest) {
     const changedLines = getChangedLines(isIgnored, pullRequest)
     console.log("Changed Lines: " + changedLines)
     console.log(pullRequest)
