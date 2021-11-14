@@ -123,7 +123,7 @@ async function main() {
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
   var comment = "**Last 50 Pull Request Size Stats**\n";
-  comment += "---";
+  comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
   comment += "**Median:** " + medianLinesChanged + " lines\n"
   comment += "**Size counts:** " + JSON.stringify(sizeCounts) + "\n"
@@ -136,6 +136,7 @@ async function main() {
   });
   
   for(var i = 0; i < comments.data.length; i++) {
+	  console.log(comments.data[i])
     if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
       alreadyHasComment = true;
     }
