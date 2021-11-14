@@ -128,8 +128,9 @@ async function main() {
   comment += "**Median:** " + medianLinesChanged + " lines\n"
   comment += "**Size counts:** " + JSON.stringify(sizeCounts) + "\n"
   comment += "**Largest change:** " + JSON.stringify(largestChange) + "\n"
-  
+ 
   var alreadyHasComment = false;
+  var pull_number = eventData.pull_request.number;
   var comments = await octokit.rest.issues.listComments({
     ...pullRequestHome,
     issue_number: pull_number,
