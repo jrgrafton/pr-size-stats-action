@@ -72,6 +72,7 @@ async function main() {
     sort : 'created',
     direction: 'desc',
 	  per_page: 100,
+    state : 'all',
     page: 1,
     headers: {
       accept: "application/vnd.github.v3.text+json"
