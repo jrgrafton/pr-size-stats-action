@@ -60,7 +60,7 @@ async function main() {
     repo: eventData.pull_request.base.repo.name
   };
 
-  //var pull_number = eventData.pull_request.number;
+  var pull_number = eventData.pull_request.number;
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
@@ -89,17 +89,17 @@ async function main() {
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
-    var pullRequestNumber = Number(pullRequest.number);
+    var pull_number = Number(pullRequest.number);
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
-      pullRequestNumber,
+      pull_number,
       headers: {
         accept: "application/vnd.github.v3.diff"
       }
     });
     
     const changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
-    console.log("Number: " + pullRequestNumber)
+    console.log("Number: " + pull_number)
     console.log("Changed Lines: " + changedLines)
   }
 	
