@@ -136,6 +136,7 @@ async function main() {
     console.log("Matching label:", sizeLabel);
   }
   allLineChanges.sort();
+  console.log(allLineChanges);
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
