@@ -135,7 +135,7 @@ async function main() {
     console.log("Changed Lines: " + changedLines)
     console.log("Matching label:", sizeLabel);
   }
-  allLineChanges.sort();
+  allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
   console.log(allLineChanges);
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
