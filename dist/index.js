@@ -84,10 +84,8 @@ async function main() {
     }
   });
 	
-  console.log("PRINTING FIRST DATA FROM LIST")
-  console.log(pullRequests.data[0])
-  console.log("PRINTING DATA FROM THIS PULL")
-  console.log(pullRequestDiff.data)
+  console.log("FOUND THIS MANY PULL REQUESTS")
+  console.log(pullRequests.data.length)
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     const pullRequest = pullRequests.data[0];
