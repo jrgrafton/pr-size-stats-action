@@ -130,7 +130,7 @@ async function main() {
   comment += "**Largest change:** " + JSON.stringify(largestChange) + "\n"
   
   var alreadyHasComment = false;
-  var comments = octokit.rest.issues.listComments({
+  var comments = await octokit.rest.issues.listComments({
     ...pullRequestHome,
     issue_number: pull_number,
   });
