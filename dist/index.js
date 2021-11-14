@@ -83,6 +83,10 @@ async function main() {
     }
   });
 	
+  console.log("TESTING FETCHING ALL PULL REQUESTS")
+  console.log(pullRequests)
+  console.log(pullRequests.length)	
+	
   for (const pullRequest in pullRequests) {
     console.log(JSON.stringify(pullRequest))
   }
