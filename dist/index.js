@@ -60,7 +60,7 @@ async function main() {
     repo: eventData.pull_request.base.repo.name
   };
 
-  var pull_number = eventData.pull_request.number;
+  //var pull_number = eventData.pull_request.number;
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
@@ -76,27 +76,20 @@ async function main() {
     }
   });
   
-  const pullRequestDiffOld = await octokit.pulls.get({
+  /* const pullRequestDiffOld = await octokit.pulls.get({
     ...pullRequestHome,
     pull_number,
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
-  });
+  });*/
 	
   console.log("FOUND THIS MANY PULL REQUESTS")
   console.log(pullRequests.data.length)
-  
-  console.log("OLD DIFF FOUND")
-  console.log(pullRequestDiffOld)
 
   for(var i = 0; i < pullRequests.data.length; i++) {
-    const pullRequest = pullRequests.data[0];
-    pull_number = Number(pullRequest.number);
-    console.log("expected: " + pull_number);
-    console.log(typeof pull_number)
-    //console.log("got: " + pullRequestNumber)
-    //console.log(typeof pullRequestNumber);
+    var pullRequest = pullRequests.data[i];
+    var pullRequestNumber = Number(pullRequest.number);
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
       pull_number,
