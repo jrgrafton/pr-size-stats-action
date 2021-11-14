@@ -92,8 +92,8 @@ async function main() {
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     const pullRequest = pullRequests.data[0];
-    const pullRequestNumber = "" + pullRequest.number;
-    console.log("expected: " + typeof pull_number);
+    const pullRequestNumber = Number(pullRequest.number);
+    console.log("expected: " + pull_number);
     console.log(typeof pull_number)
     console.log("got: " + pullRequestNumber)
     console.log(typeof pullRequestNumber);
