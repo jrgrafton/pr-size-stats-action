@@ -71,7 +71,7 @@ async function main() {
     ...pullRequestHome,
     sort : 'created',
     direction: 'desc',
-    per_page: 100,
+    per_page: 50,
     state : 'all',
     headers: {
       accept: "application/vnd.github.v3.text+json"
@@ -94,7 +94,19 @@ async function main() {
     url: ""
   }
   
-  console.log(pullRequests.data[0]);
+  var sizeCounts = {
+    "XS" : 0,
+	  "S" : 0,
+    "M" : 0,
+    "L" : 0,
+    "XL" : 0,
+    "XXL" : 0
+  }
+  
+  var totalLinesChanged = 0;
+  var allLineChanges = [];
+  
+  //console.log(pullRequests.data[0]);
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
@@ -109,17 +121,31 @@ async function main() {
     
     var changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
     var sizes = getSizesInput();
-    var sizeLabel = getSizeLabel(changedLines, sizes);
+    var sizeLabel = getSizeLabel(changedLines, sizes).split("/")[1];
     
     if(changedLines > largestChange.size) { 
       largestChange.size = changedLines
-      largestChange.url = pullRequest.url
+      largestChange.url = pullRequest.html_url
     }
+    sizeCounts[sizeLabel]++
+    totalLinesChanged += changedLines;
+    allLineChanges.push(changedLines);
     
     console.log("Number: " + pull_number)
     console.log("Changed Lines: " + changedLines)
     console.log("Matching label:", sizeLabel);
   }
+  allLineChanges.sort();
+  
+  var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
+  var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
+  
+  console.log("Average: " + averageLinesChanged)
+  console.log("Median: " + medianLinesChanged)
+  console.log("Size counts")
+  console.log(sizeCounts)
+  console.log("Largest")
+  console.log(largestChange)
 	
   return true;
 
