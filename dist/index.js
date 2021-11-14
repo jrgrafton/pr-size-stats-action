@@ -91,17 +91,18 @@ async function main() {
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     const pullRequest = pullRequests.data[0];
+    const pullRequestNumber = pullRequest.number;
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
-      pullRequest.number,
+      pullRequestNumber,
       headers: {
         accept: "application/vnd.github.v3.diff"
       }
     });
     
     const changedLines = getChangedLines(isIgnored, pullRequestDiff)
-    console.log("Number: " + changedLines)
-    console.log("Changed Lines: " + pullRequest.number)
+    console.log("Number: " + pullRequestNumber)
+    console.log("Changed Lines: " + changedLines)
   }
 	
   return true;
