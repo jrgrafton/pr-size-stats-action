@@ -88,7 +88,7 @@ async function main() {
   console.log(pullRequests.length)	
 	
   for (const pullRequest in pullRequests.data) {
-    const changedLines = getChangedLines(false, pullRequest)
+    const changedLines = getChangedLines(isIgnored, pullRequest)
     console.log("Changed Lines: " + changedLines)
     console.log(JSON.stringify(pullRequest))
   }
