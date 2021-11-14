@@ -78,16 +78,18 @@ async function main() {
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
     sort : 'created',
+    direction: 'desc',
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
   });
 	
   console.log("TESTING FETCHING ALL PULL REQUESTS")
-  console.log(pullRequests)
   console.log(pullRequests.length)	
 	
-  for (const pullRequest in pullRequests) {
+  for (const pullRequest in pullRequests.data) {
+    const changedLines = getChangedLines(false, pullRequest)
+    console.log("Changed Lines: " + changedLines)
     console.log(JSON.stringify(pullRequest))
   }
 	
