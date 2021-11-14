@@ -89,7 +89,8 @@ async function main() {
   console.log("PRINTING DATA FROM THIS PULL")
   console.log(pullRequestDiff.data)
 
-  pullRequests.data.forEach(function(pullRequest) {
+  for(var i = 0; i < pullRequests.data.length; i++) {
+    const pullRequest = pullRequests.data[0];
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
       pullRequest.number,
@@ -101,7 +102,7 @@ async function main() {
     const changedLines = getChangedLines(isIgnored, pullRequestDiff)
     console.log("Number: " + changedLines)
     console.log("Changed Lines: " + pullRequest.number)
-	})
+  }
 	
   return true;
 
