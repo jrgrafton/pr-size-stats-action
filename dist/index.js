@@ -71,10 +71,14 @@ async function main() {
     ...pullRequestHome,
     sort : 'created',
     direction: 'desc',
+	  per_page: 100,
+    page: 1,
     headers: {
       accept: "application/vnd.github.v3.text+json"
     }
   });
+  
+  console.log(pullRequests)
   
   /* const pullRequestDiffOld = await octokit.pulls.get({
     ...pullRequestHome,
@@ -89,7 +93,7 @@ async function main() {
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
-    var pull_number = Number(pullRequest.number);
+    pull_number = Number(pullRequest.number);
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
       pull_number,
