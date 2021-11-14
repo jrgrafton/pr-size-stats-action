@@ -136,17 +136,24 @@ async function main() {
     console.log("Matching label:", sizeLabel);
   }
   allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
-  console.log(allLineChanges);
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
+  var comment = "*Last 50 PR Size Stats*";
+  comment.concat("*Average:* " + averageLinesChanged + "\n")
+  comment.concat("*Median:* " + medianLinesChanged + "\n")
+  comment.concat("*Size counts:* " + JSON.stringify(sizeCounts) + "\n")
+  comment.concat("*Largest change:* " + JSON.stringify(largestChange) + "\n")
   
-  console.log("Average: " + averageLinesChanged)
-  console.log("Median: " + medianLinesChanged)
-  console.log("Size counts")
-  console.log(sizeCounts)
-  console.log("Largest")
-  console.log(largestChange)
+  console.log("CREATING COMMENT")
+  console.log(comment)
+	
+  var pull_number = eventData.pull_request.number;
+  await octokit.pulls.createReviewComment({
+    ...pullRequestHome,
+    pull_number,
+    comment,
+  });
 	
   return true;
 
