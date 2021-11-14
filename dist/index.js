@@ -100,7 +100,7 @@ async function main() {
     pull_number = Number(pullRequest.number);
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
-      pull_number,
+      pull_number : pull_number,
       headers: {
         accept: "application/vnd.github.v3.diff"
       }
@@ -123,10 +123,10 @@ async function main() {
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
   var comment = "*Last 50 PR Size Stats*";
-  comment.concat("*Average:* " + averageLinesChanged + "\n")
-  comment.concat("*Median:* " + medianLinesChanged + "\n")
-  comment.concat("*Size counts:* " + JSON.stringify(sizeCounts) + "\n")
-  comment.concat("*Largest change:* " + JSON.stringify(largestChange) + "\n")
+  comment += "*Average:* " + averageLinesChanged + "\n"
+  comment += "*Median:* " + medianLinesChanged + "\n"
+  comment += "*Size counts:* " + JSON.stringify(sizeCounts) + "\n"
+  comment += "*Largest change:* " + JSON.stringify(largestChange) + "\n"
   
   console.log("CREATING COMMENT")
   console.log(comment)
@@ -134,8 +134,8 @@ async function main() {
   var pull_number = eventData.pull_request.number;
   await octokit.pulls.createReviewComment({
     ...pullRequestHome,
-    pull_number,
-    comment,
+    pull_number : pull_number,
+    body : comment,
   });
 	
   return true;
