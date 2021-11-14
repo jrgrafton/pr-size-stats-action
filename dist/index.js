@@ -132,11 +132,18 @@ async function main() {
   console.log(comment)
 	
   var pull_number = eventData.pull_request.number;
-  await octokit.pulls.createReviewComment({
+  
+  await octokit.issues.createComment({
+    ...pullRequestHome,
+    issue_number: pull_number,
+    body: comment
+  });
+  
+  /* await octokit.pulls.createReviewComment({
     ...pullRequestHome,
     pull_number : pull_number,
     body : comment,
-  });
+  }); */
 	
   return true;
 
