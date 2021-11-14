@@ -92,12 +92,12 @@ async function main() {
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     const pullRequest = pullRequests.data[0];
-    const pullRequestNumber = pullRequest.number;
+    const pullRequestNumber = parseInt(pullRequest.number);
     console.log("expected: " + pull_number);
     console.log("got: " + pullRequestNumber)
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
-      pull_number,
+      pullRequestNumber,
       headers: {
         accept: "application/vnd.github.v3.diff"
       }
