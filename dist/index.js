@@ -122,14 +122,28 @@ async function main() {
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
-  var comment = "*Last 50 PR Size Stats*";
-  comment += "*Average:* " + averageLinesChanged + "\n"
-  comment += "*Median:* " + medianLinesChanged + "\n"
-  comment += "*Size counts:* " + JSON.stringify(sizeCounts) + "\n"
-  comment += "*Largest change:* " + JSON.stringify(largestChange) + "\n"
+  var comment = "**Last 50 Pull Request Size Stats**\n";
+  comment += "---";
+  comment += "**Average:** " + averageLinesChanged + " lines\n"
+  comment += "**Median:** " + medianLinesChanged + " lines\n"
+  comment += "**Size counts:** " + JSON.stringify(sizeCounts) + "\n"
+  comment += "**Largest change:** " + JSON.stringify(largestChange) + "\n"
+  
+  var alreadyHasComment = false;
+  var comments = octokit.rest.issues.listComments({
+    ...pullRequestHome,
+    issue_number: pull_number,
+  });
+  
+  for(var i = 0; i < comments.data.length; i++) {
+    if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
+      alreadyHasComment = true;
+    }
+  }
   
   console.log("CREATING COMMENT")
   console.log(comment)
+  console.log("ALREADY HAS COMMENT? " + alreadyHasComment);
 	
   var pull_number = eventData.pull_request.number;
   
@@ -139,12 +153,6 @@ async function main() {
     body: comment
   });
   
-  /* await octokit.pulls.createReviewComment({
-    ...pullRequestHome,
-    pull_number : pull_number,
-    body : comment,
-  }); */
-	
   return true;
 
   /* const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
