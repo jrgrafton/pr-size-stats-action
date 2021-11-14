@@ -67,13 +67,27 @@ async function main() {
     userAgent: "pascalgn/size-label-action"
   });
 
-  const pullRequestDiff = await octokit.pulls.get({
+  /* const pullRequestDiff = await octokit.pulls.get({
     ...pullRequestHome,
     pull_number,
     headers: {
       accept: "application/vnd.github.v3.diff"
     }
+  }); */
+  
+  const pullRequests = await octokit.pulls.list({
+    ...pullRequestHome,
+    sort : 'created',
+    headers: {
+      accept: "application/vnd.github.v3.diff"
+    }
   });
+	
+  for (const pullRequest in pullRequests) {
+    console.log(JSON.stringify(pullRequest))
+  }
+	
+  return true;
 
   const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
   console.log("Changed lines:", changedLines);
