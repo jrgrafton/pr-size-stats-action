@@ -86,16 +86,16 @@ async function main() {
 	
   console.log("TESTING FETCHING ALL PULL REQUESTS")
   console.log(pullRequests)	
-	
-  for (const pullRequest in pullRequests.data) {
+
+	pullRequests.data.forEach(function(pullRequest) {
     const changedLines = getChangedLines(isIgnored, pullRequest)
     console.log("Changed Lines: " + changedLines)
     console.log(pullRequest)
-  }
+	})
 	
   return true;
 
-  const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
+  /* const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
   console.log("Changed lines:", changedLines);
 
   const sizes = getSizesInput();
@@ -136,7 +136,7 @@ async function main() {
 
   debug("Success!");
 
-  return true;
+  return true; */
 }
 
 function debug(...str) {
