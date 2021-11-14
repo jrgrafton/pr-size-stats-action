@@ -78,17 +78,6 @@ async function main() {
     }
   });
   
-  /* const pullRequestDiffOld = await octokit.pulls.get({
-    ...pullRequestHome,
-    pull_number,
-    headers: {
-      accept: "application/vnd.github.v3.diff"
-    }
-  });*/
-	
-  console.log("FOUND THIS MANY PULL REQUESTS")
-  console.log(pullRequests.data.length)
-  
   var largestChange = {
     size: 0,
     url: ""
@@ -105,8 +94,6 @@ async function main() {
   
   var totalLinesChanged = 0;
   var allLineChanges = [];
-  
-  //console.log(pullRequests.data[0]);
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
@@ -130,10 +117,6 @@ async function main() {
     sizeCounts[sizeLabel]++
     totalLinesChanged += changedLines;
     allLineChanges.push(changedLines);
-    
-    console.log("Number: " + pull_number)
-    console.log("Changed Lines: " + changedLines)
-    console.log("Matching label:", sizeLabel);
   }
   allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
   
