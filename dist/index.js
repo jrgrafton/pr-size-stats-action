@@ -71,7 +71,7 @@ async function main() {
     ...pullRequestHome,
     sort : 'created',
     direction: 'desc',
-	  per_page: 100,
+    per_page: 100,
     state : 'all',
     headers: {
       accept: "application/vnd.github.v3.text+json"
@@ -88,6 +88,13 @@ async function main() {
 	
   console.log("FOUND THIS MANY PULL REQUESTS")
   console.log(pullRequests.data.length)
+  
+  var largestChange = {
+    size: 0,
+    url: ""
+  }
+  
+  console.log(pullRequests.data[0]);
 
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
@@ -100,9 +107,18 @@ async function main() {
       }
     });
     
-    const changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
+    var changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
+    var sizes = getSizesInput();
+    var sizeLabel = getSizeLabel(changedLines, sizes);
+    
+    if(changedLines > largestChange.size) { 
+      largestChange.size = changedLines
+      largestChange.url = pullRequest.url
+    }
+    
     console.log("Number: " + pull_number)
     console.log("Changed Lines: " + changedLines)
+    console.log("Matching label:", sizeLabel);
   }
 	
   return true;
