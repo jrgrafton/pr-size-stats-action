@@ -141,7 +141,11 @@ async function main() {
 
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
-  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:>=" + earliestDate.getFullYear() + "-0" + earliestDate.getMonth()+1)).slice(-2) + "-0" + earliestDate.getDate()).slice(-2) + "++label%3Asize/"
+  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:>=" 
+    + earliestDate.getFullYear() 
+    + "-0" + (earliestDate.getMonth()+1).slice(-2) 
+    + "-0" + earliestDate.getDate().slice(-2) 
+    + "++label%3Asize/"
   var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
