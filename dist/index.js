@@ -22,7 +22,7 @@ const defaultSizes = {
   1000: "XXL"
 };
 
-const MAX_PRS = 100;
+const MAX_PRS = 10;
 
 const actions = ["opened", "synchronize", "reopened"];
 
@@ -109,10 +109,8 @@ async function main() {
     var pullDate = new Date(Date.parse(pullRequest.created_at));
     pull_number = Number(pullRequest.number);
     
-    console.log(pullRequest.created_at)
-    console.log(pullDate)
-    
     if(pullDate.getTime() < earliestDate.getTime()) {
+      console.log("Updating earliest date from: " + earliestDate + " to " + pullDate)
       earliestDate = pullDate;
     }
     
@@ -141,7 +139,7 @@ async function main() {
 
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
-  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:" + earliestDate.getFullYear() + "-" + (earliestDate.getMonth() +1) + "-" + earliestDate.getDate() + "&label%3Asize/"
+  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:>=" + earliestDate.getFullYear() + "-0" + earliestDate.getMonth()+1)).slice(-2) + "-0" + earliestDate.getDate()).slice(-2) + "&label%3Asize/"
   var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
