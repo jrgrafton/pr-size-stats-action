@@ -130,7 +130,7 @@ async function main() {
     
     
     
-    
+    console.log("Processing: " + pull_number)
     const sizes = getSizesInput();
   const sizeLabel = getSizeLabel(changedLines, sizes);
   console.log("Matching label:", sizeLabel);
@@ -142,7 +142,7 @@ async function main() {
 
   if (add.length === 0 && remove.length === 0) {
     console.log("Correct label already assigned");
-    return false;
+    //return false;
   }
 
   if (add.length > 0) {
