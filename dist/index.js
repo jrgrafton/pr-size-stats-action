@@ -74,9 +74,6 @@ async function main() {
     issue_number: pull_number,
   });
   
-  console.log(pull_number);
-  console.log(comments);
-  
   for(var i = 0; i < comments.data.length; i++) {
     console.log(comments.data[i].body);
     if(comments.data[i].body.includes("Pull Request Size Stats")) {
