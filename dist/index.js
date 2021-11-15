@@ -162,6 +162,8 @@ async function main() {
   comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(100 / MAX_PRS * sizeCounts.XL) + "%)</span> || "
   comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(100 / MAX_PRS * sizeCounts.XXL) + "%)</span>"
   
+  console.log(comment);
+  
   var pull_number = eventData.pull_request.number;
   await octokit.issues.createComment({
     ...pullRequestHome,
