@@ -70,6 +70,8 @@ async function main() {
   var pull_number = eventData.pull_request.number;
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   
+  console.log("Already has comment? " + alreadyHasComment)
+  
   if(alreadyHasComment === true) {
     console.log("PR size stats comment already exists, returning")
     return true;
