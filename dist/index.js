@@ -106,7 +106,7 @@ async function main() {
   
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
-    var pullDate = Date.parse(pullRequest.created_at);
+    var pullDate = new Date(Date.parse(pullRequest.created_at));
     pull_number = Number(pullRequest.number);
     
     console.log(pullRequest.created_at)
