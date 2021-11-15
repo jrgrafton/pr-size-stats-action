@@ -83,6 +83,7 @@ async function main() {
   }
   
   // No existing comment, proceed
+  console.log("PR size stats comment does not exist, proceeding")
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
     sort : 'created',
@@ -110,7 +111,7 @@ async function main() {
   
   var totalLinesChanged = 0;
   var allLineChanges = [];
-  var earliestDate = new Date(Date.parse(pullRequests.data.at(-1).created_at));
+  var earliestDate = new Date(Date.parse(pullRequests.data[pullRequests.data - 1].created_at));
   
   console.log("Earliest date found is: " + earliestDate)
   
