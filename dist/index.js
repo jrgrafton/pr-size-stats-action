@@ -29,7 +29,7 @@ const actions = ["opened", "synchronize", "reopened"];
 const globrexOptions = { extended: true, globstar: true };
 
 async function main() {
-  debug("Running size-label-action...");
+  debug("Running pr-size-stats-action...");
 
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   if (!GITHUB_TOKEN) {
@@ -102,12 +102,16 @@ async function main() {
   
   var totalLinesChanged = 0;
   var allLineChanges = [];
-
-  console.log(pullRequests.data[0])
+  var earliestDate = new Date()
   
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
+    var pullDate = Date.parse(pullRequest.created_at);
     pull_number = Number(pullRequest.number);
+    
+    if(pullDate.getTime() < earliestDate.getTime()) {
+      earliestDate = pullDate;
+    }
     
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
@@ -131,10 +135,10 @@ async function main() {
   }
   
   allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
-  // "created:>2021-11-10 "
+
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
-  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/"
+  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:" + earliestDate.getFullYear() + "-" + (earliestDate.getMonth() +1) + "-" + earliestDate.getDate() + "&label%3Asize/"
   var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
