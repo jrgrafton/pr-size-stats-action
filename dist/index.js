@@ -69,7 +69,7 @@ async function main() {
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
-  if(alreadyHasComment) {
+  if(alreadyHasComment === true) {
     console.log("PR size stats comment already exists, returning")
     return true;
   }
@@ -167,6 +167,7 @@ async function commentExists(octokit, pullRequestHome, pull_number) {
   });
   
   for(var i = 0; i < comments.data.length; i++) {
+    console.log(comments.data[i].body);
     if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
       return true;
     }
