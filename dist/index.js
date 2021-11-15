@@ -60,19 +60,19 @@ async function main() {
     repo: eventData.pull_request.base.repo.name
   };
 
+  const octokit = new Octokit({
+    auth: `token ${GITHUB_TOKEN}`,
+    userAgent: "pascalgn/size-label-action"
+  });
+  
   var pull_number = eventData.pull_request.number;
-  var alreadyHasComment = commentExists(pull_number);
+  var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
   if(alreadyHasComment) {
     console.log("PR size stats comment already exists, returning")
     return true;
   }
-
-  const octokit = new Octokit({
-    auth: `token ${GITHUB_TOKEN}`,
-    userAgent: "pascalgn/size-label-action"
-  });
   
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
@@ -170,14 +170,15 @@ function debug(...str) {
   }
 }
 	
-async function commentExists(pull_number) {
-  var comments = await octokit.rest.issues.listComments({
+async function commentExists(octokit, pullRequestHome, pull_number) {
+  console.log("Looking for existing comment)
+
+  var comments = await octokit.issues.listComments({
     ...pullRequestHome,
     issue_number: pull_number,
   });
   
   for(var i = 0; i < comments.data.length; i++) {
-	  console.log(comments.data[i])
     if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
       return true;
     }
