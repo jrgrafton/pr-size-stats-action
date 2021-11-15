@@ -22,7 +22,7 @@ const defaultSizes = {
   1000: "XXL"
 };
 
-const MAX_PRS = 10;
+const MAX_PRS = 100;
 
 const actions = ["opened", "synchronize", "reopened"];
 
