@@ -69,10 +69,10 @@ async function main() {
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
-  if(alreadyHasComment) {
+  /* if(alreadyHasComment) {
     console.log("PR size stats comment already exists, returning")
     return true;
-  }
+  } */
   
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
@@ -171,7 +171,7 @@ function debug(...str) {
 }
 	
 async function commentExists(octokit, pullRequestHome, pull_number) {
-  console.log("Looking for existing stats comment")
+  console.log("Looking for existing size stats comment")
 
   var comments = await octokit.issues.listComments({
     ...pullRequestHome,
