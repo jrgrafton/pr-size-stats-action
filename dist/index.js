@@ -146,9 +146,9 @@ async function main() {
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
   var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:>=" 
-    + earliestDate.getFullYear() 
-    + ("--0" + (earliestDate.getMonth()+1)).slice(-2) 
-    + ("--0" + earliestDate.getDate()).slice(-2) 
+    + earliestDate.getFullYear() + "-"
+    + ("0" + (earliestDate.getMonth()+1)).slice(-2) + "-"
+    + ("0" + earliestDate.getDate()).slice(-2) 
     + "++label%3Asize/"
   var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
@@ -162,7 +162,7 @@ async function main() {
   comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(100 / MAX_PRS * sizeCounts.XL) + "%)</span> || "
   comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(100 / MAX_PRS * sizeCounts.XXL) + "%)</span>"
   
-  console.log(comment);
+  console.log("Posting comment: " + comment);
   
   var pull_number = eventData.pull_request.number;
   await octokit.issues.createComment({
