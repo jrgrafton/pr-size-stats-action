@@ -1,4 +1,4 @@
-** Note: ** this is a hacked prototype on top of https://github.com/pascalgn/size-label-action, use at your own risk :)
+** Note:** this is a hacked prototype on top of https://github.com/pascalgn/size-label-action, use at your own risk :)
 
 # pr-size-stats-action
 
