@@ -22,6 +22,8 @@ const defaultSizes = {
   1000: "XXL"
 };
 
+const MAX_PRS = 100;
+
 const actions = ["opened", "synchronize", "reopened"];
 
 const globrexOptions = { extended: true, globstar: true };
@@ -67,7 +69,7 @@ async function main() {
   
   var pull_number = eventData.pull_request.number;
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
-  const MAX_PRS = 50;
+  
   
   if(alreadyHasComment === true) {
     console.log("PR size stats comment already exists, returning")
@@ -124,7 +126,55 @@ async function main() {
     sizeCounts[sizeLabel]++
     totalLinesChanged += changedLines;
     allLineChanges.push(changedLines);
+    
+    
+    
+    
+    
+    const sizes = getSizesInput();
+  const sizeLabel = getSizeLabel(changedLines, sizes);
+  console.log("Matching label:", sizeLabel);
+
+  const { add, remove } = getLabelChanges(
+    sizeLabel,
+    pullRequest.labels
+  );
+
+  if (add.length === 0 && remove.length === 0) {
+    console.log("Correct label already assigned");
+    return false;
   }
+
+  if (add.length > 0) {
+    console.log("Adding labels:", add);
+    await octokit.issues.addLabels({
+      ...pullRequestHome,
+      issue_number: pull_number,
+      labels: add
+    });
+  }
+
+  for (const label of remove) {
+    console.log("Removing label:", label);
+    try {
+      await octokit.issues.removeLabel({
+        ...pullRequestHome,
+        issue_number: pull_number,
+        name: label
+      });
+    } catch (error) {
+      console.log("Ignoring removing label error:", error);
+    }
+  }
+    
+    
+    
+    
+    
+    
+  }
+  
+  return
   allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
