@@ -61,6 +61,13 @@ async function main() {
   };
 
   var pull_number = eventData.pull_request.number;
+  var alreadyHasComment = commentExists(pull_number);
+  const MAX_PRS = 50;
+  
+  if(alreadyHasComment) {
+    console.log("PR size stats comment already exists, returning")
+    return true;
+  }
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
@@ -71,7 +78,7 @@ async function main() {
     ...pullRequestHome,
     sort : 'created',
     direction: 'desc',
-    per_page: 50,
+    per_page: MAX_PRS,
     state : 'all',
     headers: {
       accept: "application/vnd.github.v3.text+json"
@@ -122,15 +129,48 @@ async function main() {
   
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
-  var comment = "**Last 50 Pull Request Size Stats**\n";
+  var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/"
+  var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
   comment += "**Median:** " + medianLinesChanged + " lines\n"
-  comment += "**Size counts:** " + JSON.stringify(sizeCounts) + "\n"
-  comment += "**Largest change:** " + JSON.stringify(largestChange) + "\n"
- 
-  var alreadyHasComment = false;
+  comment += "**Largest change:** " + largestChange.size + "lines [src](" + largestChange.url + ")\n"
+  comment += "**Size counts:** <span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS + "%)</span> || "
+  comment += "<span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS + "%)</span> || "
+  comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(MAX_PRS / sizeCounts.S + "%)</span> || "
+  comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(MAX_PRS / sizeCounts.M + "%)</span> || "
+  comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(MAX_PRS / sizeCounts.L + "%)</span> || "
+  comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(MAX_PRS / sizeCounts.XL + "%)</span> || "
+  comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(MAX_PRS / sizeCounts.XXL + "%)</span>"
+                                                                                  
+ /* 
+  **Last 50 Pull Request Size Stats**
+---
+**Average:** 182.48 lines
+**Median:** 17 lines
+**Largest change:** 2762 lines[[src](https://github.com/zwift/zwift-game-client/pull/893)]
+**Size counts:** <span>[XS](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XS) (32%)</span>  || <span>[S](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/S) (24%)</span> || <span>[M](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/M) (16%)</span> || <span>[L](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/L) (22%)</span> || <span>[XL](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XL) (2%)</span> || <span>[XXL](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XXL) (4%)</span>
+  
+  */
+  
+  
   var pull_number = eventData.pull_request.number;
+  await octokit.issues.createComment({
+    ...pullRequestHome,
+    issue_number: pull_number,
+    body: comment
+  });
+  
+  return true;
+}
+
+function debug(...str) {
+  if (process.env.DEBUG_ACTION) {
+    console.log.apply(console, str);
+  }
+}
+	
+function commentExists(pull_number) {
   var comments = await octokit.rest.issues.listComments({
     ...pullRequestHome,
     issue_number: pull_number,
@@ -139,72 +179,11 @@ async function main() {
   for(var i = 0; i < comments.data.length; i++) {
 	  console.log(comments.data[i])
     if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
-      alreadyHasComment = true;
+      return true;
     }
   }
-  
-  console.log("CREATING COMMENT")
-  console.log(comment)
-  console.log("ALREADY HAS COMMENT? " + alreadyHasComment);
 	
-  var pull_number = eventData.pull_request.number;
-  
-  await octokit.issues.createComment({
-    ...pullRequestHome,
-    issue_number: pull_number,
-    body: comment
-  });
-  
-  return true;
-
-  /* const changedLines = getChangedLines(isIgnored, pullRequestDiff.data);
-  console.log("Changed lines:", changedLines);
-
-  const sizes = getSizesInput();
-  const sizeLabel = getSizeLabel(changedLines, sizes);
-  console.log("Matching label:", sizeLabel);
-
-  const { add, remove } = getLabelChanges(
-    sizeLabel,
-    eventData.pull_request.labels
-  );
-
-  if (add.length === 0 && remove.length === 0) {
-    console.log("Correct label already assigned");
-    return false;
-  }
-
-  if (add.length > 0) {
-    debug("Adding labels:", add);
-    await octokit.issues.addLabels({
-      ...pullRequestHome,
-      issue_number: pull_number,
-      labels: add
-    });
-  }
-
-  for (const label of remove) {
-    debug("Removing label:", label);
-    try {
-      await octokit.issues.removeLabel({
-        ...pullRequestHome,
-        issue_number: pull_number,
-        name: label
-      });
-    } catch (error) {
-      debug("Ignoring removing label error:", error);
-    }
-  }
-
-  debug("Success!");
-
-  return true; */
-}
-
-function debug(...str) {
-  if (process.env.DEBUG_ACTION) {
-    console.log.apply(console, str);
-  }
+  return false;
 }
 
 function parseIgnored(str = "") {
