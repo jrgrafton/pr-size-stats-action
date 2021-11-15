@@ -109,6 +109,9 @@ async function main() {
     var pullDate = Date.parse(pullRequest.created_at);
     pull_number = Number(pullRequest.number);
     
+    console.log(pullRequest.created_at)
+    console.log(pullDate)
+    
     if(pullDate.getTime() < earliestDate.getTime()) {
       earliestDate = pullDate;
     }
