@@ -22,7 +22,7 @@ const defaultSizes = {
   1000: "XXL"
 };
 
-const MAX_PRS = 100;
+const MAX_PRS = 10;
 
 const actions = ["opened", "synchronize", "reopened"];
 
@@ -67,16 +67,22 @@ async function main() {
     userAgent: "pascalgn/size-label-action"
   });
   
+  // Check for existing comment
   var pull_number = eventData.pull_request.number;
-  var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
+  var comments = await octokit.issues.listComments({
+    ...pullRequestHome,
+    issue_number: pull_number,
+  });
   
-  console.log("Already has comment? " + alreadyHasComment)
-  
-  if(alreadyHasComment === true) {
-    console.log("PR size stats comment already exists, returning")
-    return true;
+  for(var i = 0; i < comments.data.length; i++) {
+    console.log(comments.data[i].body);
+    if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
+      console.log("PR size stats comment already exists, returning")
+      return true;
+    }
   }
   
+  // No existing comment, proceed
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
     sort : 'created',
@@ -104,17 +110,14 @@ async function main() {
   
   var totalLinesChanged = 0;
   var allLineChanges = [];
-  var earliestDate = new Date()
+  var earliestDate = new Date(Date.parse(pullRequests.data.at(-1).created_at));
+  
+  console.log("Earliest date found is: " + earliestDate)
   
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
     var pullDate = new Date(Date.parse(pullRequest.created_at));
     pull_number = Number(pullRequest.number);
-    
-    if(pullDate.getTime() < earliestDate.getTime()) {
-      console.log("Updating earliest date from: " + earliestDate + " to " + pullDate)
-      earliestDate = pullDate;
-    }
     
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
@@ -172,24 +175,6 @@ function debug(...str) {
   if (process.env.DEBUG_ACTION) {
     console.log.apply(console, str);
   }
-}
-	
-async function commentExists(octokit, pullRequestHome, pull_number) {
-  console.log("Looking for existing size stats comment")
-
-  var comments = await octokit.issues.listComments({
-    ...pullRequestHome,
-    issue_number: pull_number,
-  });
-  
-  for(var i = 0; i < comments.data.length; i++) {
-    console.log(comments.data[i].body);
-    if(comments.data[i].body.includes("Last 50 Pull Request Size Stats")) {
-      return true;
-    }
-  }
-	
-  return false;
 }
 
 function parseIgnored(str = "") {
