@@ -66,10 +66,10 @@ async function main() {
   });
   
   var pull_number = eventData.pull_request.number;
-  var commentExists = commentExists(octokit, pullRequestHome, pull_number);
+  var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
-  if(commentExists) {
+  if(alreadyHasComment) {
     console.log("PR size stats comment already exists, returning")
     return true;
   }
