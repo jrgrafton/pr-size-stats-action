@@ -111,7 +111,7 @@ async function main() {
   
   var totalLinesChanged = 0;
   var allLineChanges = [];
-  var earliestDate = new Date(Date.parse(pullRequests.data[pullRequests.data - 1].created_at));
+  var earliestDate = new Date(Date.parse(pullRequests.data[pullRequests.data.length - 1].created_at));
   
   console.log("Earliest date found is: " + earliestDate)
   
