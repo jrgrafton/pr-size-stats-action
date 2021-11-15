@@ -116,7 +116,7 @@ async function main() {
     });
     
     var changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
-    var sizes = getSizesInput();
+    /*var sizes = getSizesInput();
     var sizeLabel = getSizeLabel(changedLines, sizes).split("/")[1];
     
     if(changedLines > largestChange.size) { 
@@ -125,7 +125,7 @@ async function main() {
     }
     sizeCounts[sizeLabel]++
     totalLinesChanged += changedLines;
-    allLineChanges.push(changedLines);
+    allLineChanges.push(changedLines);*/
     
     
     
