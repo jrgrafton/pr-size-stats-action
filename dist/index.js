@@ -135,13 +135,13 @@ async function main() {
   comment += "**Average:** " + averageLinesChanged + " lines\n"
   comment += "**Median:** " + medianLinesChanged + " lines\n"
   comment += "**Largest change:** " + largestChange.size + "lines [src](" + largestChange.url + ")\n"
-  comment += "**Size counts:** <span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS + "%)</span> || "
-  comment += "<span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS + "%)</span> || "
-  comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(MAX_PRS / sizeCounts.S + "%)</span> || "
-  comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(MAX_PRS / sizeCounts.M + "%)</span> || "
-  comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(MAX_PRS / sizeCounts.L + "%)</span> || "
-  comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(MAX_PRS / sizeCounts.XL + "%)</span> || "
-  comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(MAX_PRS / sizeCounts.XXL + "%)</span>"
+  comment += "**Size counts:** <span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS) + "%)</span> || "
+  comment += "<span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS) + "%)</span> || "
+  comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(MAX_PRS / sizeCounts.S) + "%)</span> || "
+  comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(MAX_PRS / sizeCounts.M) + "%)</span> || "
+  comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(MAX_PRS / sizeCounts.L) + "%)</span> || "
+  comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(MAX_PRS / sizeCounts.XL) + "%)</span> || "
+  comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(MAX_PRS / sizeCounts.XXL) + "%)</span>"
                                                                                   
  /* 
   **Last 50 Pull Request Size Stats**
