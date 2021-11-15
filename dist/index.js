@@ -70,7 +70,6 @@ async function main() {
   var pull_number = eventData.pull_request.number;
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   
-  
   if(alreadyHasComment === true) {
     console.log("PR size stats comment already exists, returning")
     return true;
@@ -104,9 +103,12 @@ async function main() {
   var totalLinesChanged = 0;
   var allLineChanges = [];
 
+  console.log(pullRequests.data[0])
+  
   for(var i = 0; i < pullRequests.data.length; i++) {
     var pullRequest = pullRequests.data[i];
     pull_number = Number(pullRequest.number);
+    
     const pullRequestDiff = await octokit.pulls.get({
       ...pullRequestHome,
       pull_number : pull_number,
@@ -116,7 +118,7 @@ async function main() {
     });
     
     var changedLines = getChangedLines(isIgnored, pullRequestDiff.data)
-    /*var sizes = getSizesInput();
+    var sizes = getSizesInput();
     var sizeLabel = getSizeLabel(changedLines, sizes).split("/")[1];
     
     if(changedLines > largestChange.size) { 
@@ -125,58 +127,11 @@ async function main() {
     }
     sizeCounts[sizeLabel]++
     totalLinesChanged += changedLines;
-    allLineChanges.push(changedLines);*/
-    
-    
-    
-    
-    console.log("Processing: " + pull_number)
-    const sizes = getSizesInput();
-  const sizeLabel = getSizeLabel(changedLines, sizes);
-  console.log("Matching label:", sizeLabel);
-
-  const { add, remove } = getLabelChanges(
-    sizeLabel,
-    pullRequest.labels
-  );
-
-  if (add.length === 0 && remove.length === 0) {
-    console.log("Correct label already assigned");
-    //return false;
-  }
-
-  if (add.length > 0) {
-    console.log("Adding labels:", add);
-    await octokit.issues.addLabels({
-      ...pullRequestHome,
-      issue_number: pull_number,
-      labels: add
-    });
-  }
-
-  for (const label of remove) {
-    console.log("Removing label:", label);
-    try {
-      await octokit.issues.removeLabel({
-        ...pullRequestHome,
-        issue_number: pull_number,
-        name: label
-      });
-    } catch (error) {
-      console.log("Ignoring removing label error:", error);
-    }
-  }
-    
-    
-    
-    
-    
-    
+    allLineChanges.push(changedLines);
   }
   
-  return
   allLineChanges.sort((firstEl, secondEl) => { return parseInt(firstEl) - parseInt(secondEl) });
-  
+  // "created:>2021-11-10 "
   var averageLinesChanged = totalLinesChanged / pullRequests.data.length;
   var medianLinesChanged = allLineChanges[allLineChanges.length / 2];
   var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/"
@@ -186,11 +141,11 @@ async function main() {
   comment += "**Median:** " + medianLinesChanged + " lines\n"
   comment += "**Largest change:** " + largestChange.size + " lines [[src](" + largestChange.url + ")]\n"
   comment += "**Size counts:** <span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS) + "%)</span> || "
-  comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(MAX_PRS / sizeCounts.S) + "%)</span> || "
-  comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(MAX_PRS / sizeCounts.M) + "%)</span> || "
-  comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(MAX_PRS / sizeCounts.L) + "%)</span> || "
-  comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(MAX_PRS / sizeCounts.XL) + "%)</span> || "
-  comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(MAX_PRS / sizeCounts.XXL) + "%)</span>"
+  comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(100 / MAX_PRS * sizeCounts.S) + "%)</span> || "
+  comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(100 / MAX_PRS * sizeCounts.M) + "%)</span> || "
+  comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(100 / MAX_PRS * sizeCounts.L) + "%)</span> || "
+  comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(100 / MAX_PRS * sizeCounts.XL) + "%)</span> || "
+  comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(100 / MAX_PRS * sizeCounts.XXL) + "%)</span>"
   
   var pull_number = eventData.pull_request.number;
   await octokit.issues.createComment({
