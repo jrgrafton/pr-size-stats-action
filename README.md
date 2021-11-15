@@ -1,12 +1,12 @@
-# size-label-action
+** Note: ** this is a hacked prototype on top of https://github.com/pascalgn/size-label-action, use at your own risk :)
 
-GitHub action to assign labels based on pull request change sizes.
+# pr-size-stats-action
 
-Labels are taken from https://github.com/kubernetes/kubernetes/labels?q=size
+GitHub action to add a comment to PRs on size statistics for the last 50 PRs in a repo.
 
 ## Usage
 
-Create a `.github/workflows/size-label.yml` file:
+Create a `.github/workflows/pr-stats-sizes.yml` file:
 
 ```yaml
 name: size-label
@@ -16,21 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: size-label
-        uses: "pascalgn/size-label-action@v0.4.3"
+        uses: "jrgrafton/pr-size-stats-action@v<desired-commit-id>"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-```
-
-## Create the needed labels
-
-Export both `GITHUB_TOKEN` and `REPO` (e.g. `my-username/my-repository`) and run the script below:
-
-```bash
-for size in XL XXL XS S M L; do
-	curl -sf -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/kubernetes/kubernetes/labels/size/$size" |
-		jq '. | { "name": .name, "color": .color, "description": .description }' |
-		curl -sfXPOST -d @- -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$REPO/labels
-done
 ```
 
 ## Configuration
@@ -48,46 +36,6 @@ You can configure the environment variables in the workflow file like this:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           IGNORED: ".*\n!.gitignore\nyarn.lock\ngenerated/**"
-```
-
-## Custom sizes
-
-The default sizes are:
-
-```js
-{
-  "0": "XS",
-  "10": "S",
-  "30": "M",
-  "100": "L",
-  "500": "XL",
-  "1000": "XXL"
-}
-```
-
-You can pass your own configuration by passing `sizes`
-
-```yaml
-name: size-label
-on: pull_request
-jobs:
-  size-label:
-    runs-on: ubuntu-latest
-    steps:
-      - name: size-label
-        uses: "pascalgn/size-label-action@v0.4.2"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          sizes: >
-            {
-              "0": "XS",
-              "20": "S",
-              "50": "M",
-              "200": "L",
-              "800": "XL",
-              "2000": "XXL"
-            }
 ```
 
 ## License
