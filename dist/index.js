@@ -66,10 +66,10 @@ async function main() {
   });
   
   var pull_number = eventData.pull_request.number;
-  var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
+  var commentExists = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
-  if(alreadyHasComment) {
+  if(commentExists) {
     console.log("PR size stats comment already exists, returning")
     return true;
   }
@@ -171,7 +171,7 @@ function debug(...str) {
 }
 	
 async function commentExists(octokit, pullRequestHome, pull_number) {
-  console.log("Looking for existing comment)
+  console.log("Looking for existing stats comment")
 
   var comments = await octokit.issues.listComments({
     ...pullRequestHome,
