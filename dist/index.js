@@ -148,7 +148,10 @@ async function main() {
   var baseIssueURL = "https://github.com/zwift/zwift-game-client/issues?q=created:>=" 
     + earliestDate.getFullYear() + "-"
     + ("0" + (earliestDate.getMonth()+1)).slice(-2) + "-"
-    + ("0" + earliestDate.getDate()).slice(-2) 
+    + ("0" + earliestDate.getDate()).slice(-2) + "T"
+    + ("0" + earliestDate.getHours()).slice(-2) + ":"
+    + ("0" + earliestDate.getMinutes()).slice(-2) + ":"
+    + ("0" + earliestDate.getSeconds()).slice(-2)
     + "++label%3Asize/"
   var comment = "**Last "+ MAX_PRS + " Pull Request Size Stats**\n";
   comment += "---\n";
