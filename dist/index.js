@@ -170,7 +170,7 @@ function debug(...str) {
   }
 }
 	
-function commentExists(pull_number) {
+async function commentExists(pull_number) {
   var comments = await octokit.rest.issues.listComments({
     ...pullRequestHome,
     issue_number: pull_number,
