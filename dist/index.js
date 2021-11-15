@@ -69,10 +69,10 @@ async function main() {
   var alreadyHasComment = commentExists(octokit, pullRequestHome, pull_number);
   const MAX_PRS = 50;
   
-  /* if(alreadyHasComment) {
+  if(alreadyHasComment) {
     console.log("PR size stats comment already exists, returning")
     return true;
-  } */
+  }
   
   const pullRequests = await octokit.pulls.list({
     ...pullRequestHome,
@@ -134,25 +134,13 @@ async function main() {
   comment += "---\n";
   comment += "**Average:** " + averageLinesChanged + " lines\n"
   comment += "**Median:** " + medianLinesChanged + " lines\n"
-  comment += "**Largest change:** " + largestChange.size + "lines [src](" + largestChange.url + ")\n"
+  comment += "**Largest change:** " + largestChange.size + " lines [[src](" + largestChange.url + ")]\n"
   comment += "**Size counts:** <span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS) + "%)</span> || "
-  comment += "<span>[XS](" + baseIssueURL + "XS) (" + Math.round(MAX_PRS / sizeCounts.XS) + "%)</span> || "
   comment += "<span>[S](" + baseIssueURL + "S) (" + Math.round(MAX_PRS / sizeCounts.S) + "%)</span> || "
   comment += "<span>[M](" + baseIssueURL + "M) (" + Math.round(MAX_PRS / sizeCounts.M) + "%)</span> || "
   comment += "<span>[L](" + baseIssueURL + "L) (" + Math.round(MAX_PRS / sizeCounts.L) + "%)</span> || "
   comment += "<span>[XL](" + baseIssueURL + "XL) (" + Math.round(MAX_PRS / sizeCounts.XL) + "%)</span> || "
   comment += "<span>[XXL](" + baseIssueURL + "XXL) (" + Math.round(MAX_PRS / sizeCounts.XXL) + "%)</span>"
-                                                                                  
- /* 
-  **Last 50 Pull Request Size Stats**
----
-**Average:** 182.48 lines
-**Median:** 17 lines
-**Largest change:** 2762 lines[[src](https://github.com/zwift/zwift-game-client/pull/893)]
-**Size counts:** <span>[XS](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XS) (32%)</span>  || <span>[S](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/S) (24%)</span> || <span>[M](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/M) (16%)</span> || <span>[L](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/L) (22%)</span> || <span>[XL](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XL) (2%)</span> || <span>[XXL](https://github.com/zwift/zwift-game-client/issues?q=label%3Asize/XXL) (4%)</span>
-  
-  */
-  
   
   var pull_number = eventData.pull_request.number;
   await octokit.issues.createComment({
